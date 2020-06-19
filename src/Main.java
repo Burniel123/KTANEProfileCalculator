@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Holds all fundamental program logic relating to the KTANE Profile Calculator, such as startup.
@@ -22,8 +23,7 @@ public class Main
      *             References to files which should be used in the calculation.
      *             Desired name for the completed profile.
      */
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) throws IOException, ListFormatException {
         if(args.length == 0)
         {//Users must supply appropriate command line arguments to use this program.
             System.err.println("Invalid syntax! You must supply information on the command line.");
@@ -101,6 +101,8 @@ public class Main
                 }
 
             }
+            ProfileCreator pc = new ProfileCreator(profileOperandOne, destinationTarget, false);
+            pc.createProfile();
         }
         else
         {//All other operations are binary and thus can be treated in similar ways initially.
@@ -131,7 +133,7 @@ public class Main
                     destinationTarget = new File(arg);
                 }
                 else if(fileOperandsCount == 2 && !directorySupplied)
-                {
+                {//If this is the third file, it must be a target directory for a file-only operation.
                     fileOperandsCount++;
                     destinationTarget = new File(arg);
                 }
