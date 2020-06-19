@@ -39,7 +39,8 @@ public class Main
         File destinationTarget = null;
 
         flagloop:
-        for(String arg : args) {//Establishes all present switches before processing any user input.
+        for(String arg : args)
+        {//Establishes all present switches before processing any user input.
             if (!(arg.startsWith("-") && arg.length() > 1))
                 break;
 
@@ -63,5 +64,84 @@ public class Main
                 default : mode = CalculatorMode.UNRECOGNISED;break flagloop;
             }
         }
+
+
+        if(mode == CalculatorMode.UNRECOGNISED)
+        {//Program must terminate if unable to determine which function to perform.
+            System.err.println("Invalid syntax! Unable to parse your command line instructions.");
+            System.err.println("Please see the documentation for examples of how to use this tool.");
+            //TODO: Create the documentation when appropriate and link from here.
+            System.exit(-1);
+        }
+
+        int fileOperandsCount = 0;
+        boolean directorySupplied = false;
+        boolean unacceptableFilesSupplied = false;
+
+        if(mode == CalculatorMode.CREATE)
+        {//Create is a unary operation and thus has a different format for specifying files to use.
+            for(String arg : args)
+            {//A second iteration of the argument list to establish which file locations are to be used.
+                if(arg.startsWith("-"))
+                    continue; //Ignore all flags as they will already have been checked.
+
+                if(fileOperandsCount == 0 && (new File(arg).isFile()))
+                {//First file supplied must be an existing file in create mode.
+                    fileOperandsCount++;
+                    profileOperandOne = new File(arg);
+                }
+                else if(fileOperandsCount == 1)
+                {//Second filename doesn't have to be an existing file, as it's the destination for the profile.
+                    fileOperandsCount++;
+                    destinationTarget = new File(arg);
+                }
+                else
+                {
+                    //TODO: Throw exception here?
+                }
+
+            }
+        }
+        else
+        {//All other operations are binary and thus can be treated in similar ways initially.
+            for(String arg : args)
+            {//A second iteration of the argument list to establish which file locations are to be used.
+                if(arg.startsWith("-"))
+                    continue; //Ignore all flags as they will already have been checked.
+
+                if(fileOperandsCount == 0 && (new File(arg).isFile()))
+                {//First file supplied may or may not be a file.
+                    fileOperandsCount++;
+                    profileOperandOne = new File(arg);
+                }
+                else if(fileOperandsCount == 0 && (new File(arg).isDirectory()))
+                {//First file supplied may be a directory for all modes except create.
+                    fileOperandsCount++;
+                    profileOperandOne = new File(arg);
+                    directorySupplied = true;
+                }
+                else if(fileOperandsCount == 1 && (new File(arg).isFile()) && !directorySupplied)
+                {//Any second file must not be a directory. A second file must not be supplied in create mode.
+                    fileOperandsCount++;
+                    profileOperandTwo = new File(arg);
+                }
+                else if(fileOperandsCount == 1 && directorySupplied)
+                {//If a directory was supplied, this will be the target for the profile.
+                    fileOperandsCount++;
+                    destinationTarget = new File(arg);
+                }
+                else if(fileOperandsCount == 2 && !directorySupplied)
+                {
+                    fileOperandsCount++;
+                    destinationTarget = new File(arg);
+                }
+                else
+                {
+                    //TODO: Throw exception here?
+                }
+
+            }
+        }
+
     }
 }
