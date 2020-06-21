@@ -76,6 +76,7 @@ public class ProfileCreator
      * Reads a text file containing module codes to be included in the file.
      * @return an ArrayList of module codes to be included in the file.
      * @throws IOException - in the event of any errors reading the file.
+     * @throws ListFormatException - if the provided text file is not formatted correctly.
      */
     private ArrayList<String> readModuleCodes() throws IOException, ListFormatException
     {

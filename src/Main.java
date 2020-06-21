@@ -116,14 +116,14 @@ public class Main
                     fileOperandsCount++;
                     profileOperandOne = new File(arg);
                 }
-                else if(fileOperandsCount == 0 && (new File(arg).isDirectory()))
-                {//First file supplied may be a directory for all modes except create.
+                else if(fileOperandsCount == 0 && (new File(arg).isDirectory()) && mode != CalculatorMode.DIFFERENCE)
+                {//First file supplied may be a directory for all remaining modes except difference.
                     fileOperandsCount++;
                     profileOperandOne = new File(arg);
                     directorySupplied = true;
                 }
                 else if(fileOperandsCount == 1 && (new File(arg).isFile()) && !directorySupplied)
-                {//Any second file must not be a directory. A second file must not be supplied in create mode.
+                {//Any second file must not be a directory.
                     fileOperandsCount++;
                     profileOperandTwo = new File(arg);
                 }
