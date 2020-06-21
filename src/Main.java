@@ -1,3 +1,5 @@
+import org.json.simple.parser.ParseException;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -16,6 +18,12 @@ public class Main
         CREATE, UNION, INTERSECTION, DIFFERENCE, UNRECOGNISED;
     }
 
+    private static CalculatorMode mode = null;
+    private static boolean verbose = false;
+    private static File profileOperandOne = null;
+    private static File profileOperandTwo = null;
+    private static File destinationTarget = null;
+
     /**
      * Main method for the KTANE Profile Calculator. Primary focus is on parsing the user's command line input.
      * @param args - list of command line arguments for the program. These may include:
@@ -23,7 +31,8 @@ public class Main
      *             References to files which should be used in the calculation.
      *             Desired name for the completed profile.
      */
-    public static void main(String[] args) throws IOException, ListFormatException {
+    public static void main(String[] args)
+    {
         if(args.length == 0)
         {//Users must supply appropriate command line arguments to use this program.
             System.err.println("Invalid syntax! You must supply information on the command line.");
@@ -31,12 +40,6 @@ public class Main
             //TODO: Create the documentation when appropriate and link from here.
             System.exit(-1);
         }
-
-        CalculatorMode mode = null;
-        boolean verbose = false;
-        File profileOperandOne = null;
-        File profileOperandTwo = null;
-        File destinationTarget = null;
 
         flagloop:
         for(String arg : args)
@@ -65,15 +68,57 @@ public class Main
             }
         }
 
+        try
+        {
+            parseOperands(args);
 
-        if(mode == CalculatorMode.UNRECOGNISED)
-        {//Program must terminate if unable to determine which function to perform.
-            System.err.println("Invalid syntax! Unable to parse your command line instructions.");
-            System.err.println("Please see the documentation for examples of how to use this tool.");
-            //TODO: Create the documentation when appropriate and link from here.
-            System.exit(-1);
+            if(mode == CalculatorMode.UNRECOGNISED)
+            {//Program must terminate if unable to determine which function to perform.
+                System.err.println("Invalid syntax! Unable to parse your command line instructions.");
+                System.err.println("Please see the documentation for examples of how to use this tool.");
+                //TODO: Create the documentation when appropriate and link from here.
+                System.exit(-1);
+            }
+            else if(mode == CalculatorMode.CREATE)
+            {
+                ProfileCreator pc = new ProfileCreator(profileOperandOne, destinationTarget, false);
+                pc.createProfile();
+            }
+            else
+            {
+                ProfileCalculations pc = null;
+                if(profileOperandTwo != null && destinationTarget != null)
+                    pc = new ProfileCalculations(profileOperandOne, profileOperandTwo, verbose, destinationTarget);
+                else if(profileOperandTwo != null)
+                    pc = new ProfileCalculations(profileOperandOne, profileOperandTwo, verbose);
+                else if(destinationTarget != null)
+                    pc = new ProfileCalculations(profileOperandOne, verbose, destinationTarget);
+                else
+                    pc = new ProfileCalculations(profileOperandOne, verbose);
+
+                if(mode == CalculatorMode.UNION)
+                    pc.computeUnion();
+                else if(mode == CalculatorMode.INTERSECTION)
+                    pc.computeIntersection();
+                else
+                    pc.computeDifference();
+            }
+        }
+        catch(ArgumentException | ListFormatException | IOException | ParseException e)
+        {
+            System.out.println("Unable to complete operation due to following reason:");
+            System.out.println(e.getMessage());
         }
 
+    }
+
+    /**
+     * Deduces the meaning of file operands specified for operations and assigns them to the relevant variables.
+     * @param args - String array of arguments entered.
+     * @throws ArgumentException - in the event that an unsuitable number of arguments have been provided.
+     */
+    private static void parseOperands(String[] args) throws ArgumentException
+    {
         int fileOperandsCount = 0;
         boolean directorySupplied = false;
         boolean unacceptableFilesSupplied = false;
@@ -97,12 +142,10 @@ public class Main
                 }
                 else
                 {
-                    //TODO: Throw exception here?
+                    throw new ArgumentException("Create operation must have one operand only.");
                 }
 
             }
-            ProfileCreator pc = new ProfileCreator(profileOperandOne, destinationTarget, false);
-            pc.createProfile();
         }
         else
         {//All other operations are binary and thus can be treated in similar ways initially.
@@ -139,11 +182,10 @@ public class Main
                 }
                 else
                 {
-                    //TODO: Throw exception here?
+                    throw new ArgumentException("Invalid number of files provided.");
                 }
 
             }
         }
-
     }
 }
