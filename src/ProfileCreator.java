@@ -31,6 +31,7 @@ public class ProfileCreator
     {
         this.moduleList = moduleList;
         this.verboseOutput = verboseOutput;
+        targetFile = new File("/calculated.json");
     }
 
     /**
@@ -47,6 +48,20 @@ public class ProfileCreator
         this.verboseOutput = verboseOutput;
     }
 
+    /**
+     * Obtains the target file being used.
+     * @return File object for the created profile's destination.
+     */
+    public File getTargetFile()
+    {
+        return targetFile;
+    }
+
+    /**
+     * Creates a profile from the object's list file operand.
+     * @throws IOException - in the event of a standard input error.
+     * @throws ListFormatException - in the event the list file is badly formatted.
+     */
     @SuppressWarnings("unchecked")
     public void createProfile() throws IOException, ListFormatException
     {

@@ -1,7 +1,11 @@
 import org.json.simple.parser.ParseException;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.Buffer;
+import java.util.Scanner;
 
 /**
  * Holds all fundamental program logic relating to the KTANE Profile Calculator, such as startup.
@@ -33,82 +37,120 @@ public class Main
      */
     public static void main(String[] args)
     {
-        if(args.length == 0)
-        {//Users must supply appropriate command line arguments to use this program.
-            System.err.println("Invalid syntax! You must supply information on the command line.");
-            System.err.println("Please see the documentation for examples of how to use this tool.");
-            //TODO: Create the documentation when appropriate and link from here.
-            System.exit(-1);
-        }
+        System.out.println("**********The KTANE Profile Calculator**********");
+        System.out.println("          Software created by Burniel");
+        System.out.println("           Documentation coming soon!");
+        System.out.println("      Enter a valid command at any time...");
 
-        flagloop:
-        for(String arg : args)
-        {//Establishes all present switches before processing any user input.
-            if (!(arg.startsWith("-") && arg.length() > 1))
-                break;
+        while(true)
+        {//Program runs until the user manually closes it, allowing them to complete as many profile operations as they wish.
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            boolean successfulRead = false;
+            String userInput = null;
+            String[] userCommand = null;
 
-            if (arg.equals("-verbose"))
-            {//The user must be able to enable a lengthy output with a verbose flag.
-                verbose = true;
-                continue;
+            while(!successfulRead)
+            {
+                try
+                {
+                    userInput = reader.readLine();
+                    userCommand = userInput.split(" ");
+                    successfulRead = true;
+                }
+                catch(IOException e)
+                {
+                    System.out.println("Command not understood. Please retry.");
+                }
             }
 
-            if(arg.length() > 2)
-            {//All non-verbose flags should only contain the - character and a letter.
-                mode = CalculatorMode.UNRECOGNISED;
-            }
-
-            switch (arg.charAt(1))
-            {//Assign the program's mode. Note if a user
-                case 'c' : mode = CalculatorMode.CREATE;break flagloop;
-                case 'u' : mode = CalculatorMode.UNION;break flagloop;
-                case 'i' : mode = CalculatorMode.INTERSECTION;break flagloop;
-                case 'd' : mode = CalculatorMode.DIFFERENCE;break flagloop;
-                default : mode = CalculatorMode.UNRECOGNISED;break flagloop;
-            }
-        }
-
-        try
-        {
-            parseOperands(args);
-
-            if(mode == CalculatorMode.UNRECOGNISED)
-            {//Program must terminate if unable to determine which function to perform.
-                System.err.println("Invalid syntax! Unable to parse your command line instructions.");
+            if(userCommand.length == 0)
+            {//Users must supply appropriate command line arguments to use this program.
+                System.err.println("Invalid syntax! You must supply information on the command line.");
                 System.err.println("Please see the documentation for examples of how to use this tool.");
                 //TODO: Create the documentation when appropriate and link from here.
                 System.exit(-1);
             }
-            else if(mode == CalculatorMode.CREATE)
-            {
-                ProfileCreator pc = new ProfileCreator(profileOperandOne, destinationTarget, false);
-                pc.createProfile();
-            }
-            else
-            {
-                ProfileCalculations pc = null;
-                if(profileOperandTwo != null && destinationTarget != null)
-                    pc = new ProfileCalculations(profileOperandOne, profileOperandTwo, verbose, destinationTarget);
-                else if(profileOperandTwo != null)
-                    pc = new ProfileCalculations(profileOperandOne, profileOperandTwo, verbose);
-                else if(destinationTarget != null)
-                    pc = new ProfileCalculations(profileOperandOne, verbose, destinationTarget);
-                else
-                    pc = new ProfileCalculations(profileOperandOne, verbose);
 
-                if(mode == CalculatorMode.UNION)
-                    pc.computeUnion();
-                else if(mode == CalculatorMode.INTERSECTION)
-                    pc.computeIntersection();
+            flagloop:
+            for(String arg : userCommand)
+            {//Establishes all present switches before processing any user input.
+                if (!(arg.startsWith("-") && arg.length() > 1))
+                    break;
+
+                if (arg.equals("-verbose"))
+                {//The user must be able to enable a lengthy output with a verbose flag.
+                    verbose = true;
+                    continue;
+                }
+
+                if(arg.length() > 2)
+                {//All non-verbose flags should only contain the - character and a letter.
+                    mode = CalculatorMode.UNRECOGNISED;
+                }
+
+                switch (arg.charAt(1))
+                {//Assign the program's mode. Note if a user
+                    case 'c' : mode = CalculatorMode.CREATE;break flagloop;
+                    case 'u' : mode = CalculatorMode.UNION;break flagloop;
+                    case 'i' : mode = CalculatorMode.INTERSECTION;break flagloop;
+                    case 'd' : mode = CalculatorMode.DIFFERENCE;break flagloop;
+                    default : mode = CalculatorMode.UNRECOGNISED;break flagloop;
+                }
+            }
+
+            try
+            {
+                parseOperands(userCommand);
+
+                if(mode == CalculatorMode.UNRECOGNISED)
+                {//Program must terminate if unable to determine which function to perform.
+                    System.err.println("Invalid syntax! Unable to parse your command line instructions.");
+                    System.err.println("Please see the documentation for examples of how to use this tool.");
+                    //TODO: Create the documentation when appropriate and link from here.
+                    System.exit(-1);
+                }
+                else if(mode == CalculatorMode.CREATE)
+                {
+                    ProfileCreator pc = null;
+                    if(destinationTarget != null)
+                        pc = new ProfileCreator(profileOperandOne, destinationTarget, verbose);
+                    else
+                        pc = new ProfileCreator(profileOperandOne, verbose);
+
+                    pc.createProfile();
+
+                    System.out.println("Operation success, created profile located at " + pc.getTargetFile().getAbsolutePath());
+                }
                 else
-                    pc.computeDifference();
+                {
+                    ProfileCalculations pc = null;
+                    if(profileOperandTwo != null && destinationTarget != null)
+                        pc = new ProfileCalculations(profileOperandOne, profileOperandTwo, verbose, destinationTarget);
+                    else if(profileOperandTwo != null)
+                        pc = new ProfileCalculations(profileOperandOne, profileOperandTwo, verbose);
+                    else if(destinationTarget != null)
+                        pc = new ProfileCalculations(profileOperandOne, verbose, destinationTarget);
+                    else
+                        pc = new ProfileCalculations(profileOperandOne, verbose);
+
+                    if(mode == CalculatorMode.UNION)
+                        pc.computeUnion();
+                    else if(mode == CalculatorMode.INTERSECTION)
+                        pc.computeIntersection();
+                    else
+                        pc.computeDifference();
+
+                    System.out.println("Operation success, created profile located at " + pc.getTargetFile().getAbsolutePath());
+                    System.out.println("You may continue to enter valid commands to further mutate these or any other profiles.");
+                }
+            }
+            catch(ArgumentException | ListFormatException | IOException | ParseException e)
+            {
+                System.out.println("Unable to complete operation due to following reason:");
+                System.out.println(e.getMessage());
             }
         }
-        catch(ArgumentException | ListFormatException | IOException | ParseException e)
-        {
-            System.out.println("Unable to complete operation due to following reason:");
-            System.out.println(e.getMessage());
-        }
+
 
     }
 
