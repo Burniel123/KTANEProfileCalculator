@@ -139,6 +139,23 @@ public class ProfileCalculations
     }
 
     /**
+     * Creates a profile representing the difference of two profiles in the operands list, writing the result to the target file.
+     * @throws IOException - in the event of a standard I/O error.
+     * @throws ParseException - in the event that a provided profile JSON cannot be parsed.
+     * @throws ArgumentException - in the event that the wrong number of operands are provided for this operation.
+     */
+    @SuppressWarnings("unchecked")
+    public void computeDifference() throws IOException, ParseException, ArgumentException
+    {
+        if(operands.size() != 2)
+            throw new ArgumentException("Difference operation requires 2 operands.");
+
+        JSONArray profile1 = readProfile(operands.get(0));
+        JSONArray profile2 = readProfile(operands.get(1));
+        writeFinalProfile(difference(profile1, profile2));
+    }
+
+    /**
      * Completes a simple union of two sets of enabled modules.
      * @param profile1 - JSONArray containing the list of enabled modules from the first profile.
      * @param profile2 - JSONArray containing the list of enabled modules from the second profile.
@@ -166,6 +183,22 @@ public class ProfileCalculations
         result.addAll(profile1);
         profile1.removeAll(profile2);
         result.removeAll(profile1);
+        return result;
+    }
+
+
+    /**
+     * Completes a simple set difference of two sets of enabled modules.
+     * @param profile1 - JSONArray containing the list of enabled modules from profile 1 (being removed FROM).
+     * @param profile2 - JSONArray containing the list of enabled modules from profile 2 (being REMOVED).
+     * @return a JSONArray containing the list of enabled modules in profile1 BUT NOT profile2.
+     */
+    @SuppressWarnings("unchecked")
+    private JSONArray difference(JSONArray profile1, JSONArray profile2)
+    {
+        JSONArray result = new JSONArray();
+        result.addAll(profile1);
+        result.removeAll(profile2);
         return result;
     }
 
