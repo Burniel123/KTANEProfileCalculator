@@ -59,7 +59,7 @@ public class ProfileCalculations
     /**
      * Constructor for a calculation with a directory for operands and a provided target file.
      *
-     * @param directory     - directory containing
+     * @param directory     - directory containing profile JSONs to be operated on.
      * @param verboseOutput - more process details are shown to the user if true.
      * @param targetFile    - file location to store the produced profile.
      */
