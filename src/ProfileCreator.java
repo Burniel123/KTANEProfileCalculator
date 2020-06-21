@@ -61,8 +61,6 @@ public class ProfileCreator
         if(targetFile == null)
             targetFile = new File("/MyProfile.json");
 
-       // targetFile.createNewFile();
-
         JSONArray modulesList = new JSONArray();
         modulesList.addAll(moduleCodesToInclude);
 
@@ -70,7 +68,6 @@ public class ProfileCreator
         profileObj.put("Operation", "0");
         profileObj.put("EnabledList", modulesList);
 
-        FileWriter profileWriter = new FileWriter(targetFile);
         System.out.println(profileObj.toJSONString());
         Files.write(Paths.get(targetFile.getPath()), profileObj.toJSONString().getBytes());
     }
