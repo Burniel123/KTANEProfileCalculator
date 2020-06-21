@@ -68,7 +68,7 @@ public class ProfileCreator
         profileObj.put("Operation", "0");
         profileObj.put("EnabledList", modulesList);
 
-        System.out.println(profileObj.toJSONString());
+        //System.out.println(profileObj.toJSONString());
         Files.write(Paths.get(targetFile.getPath()), profileObj.toJSONString().getBytes());
     }
 
