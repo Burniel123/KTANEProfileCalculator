@@ -67,14 +67,13 @@ public class ProfileCreator
     {
         ArrayList<String> moduleCodesToInclude = readModuleCodes();
 
+        if(verboseOutput)
+            System.out.println("Module list read successfully.");
+
         if(targetFile != null && !targetFile.getPath().substring(targetFile.getPath().lastIndexOf(".") + 1).equals("json"))
         {//If the user has specified a non-json file for output, throw an exception.
             throw new IOException("If a destination file for your profile is specified, it must be a JSON file.");
-            //TODO: Consider a custom exception here.
         }
-
-        if(targetFile == null)
-            targetFile = new File("/MyProfile.json");
 
         JSONArray modulesList = new JSONArray();
         modulesList.addAll(moduleCodesToInclude);
@@ -83,7 +82,9 @@ public class ProfileCreator
         profileObj.put("Operation", "0");
         profileObj.put("EnabledList", modulesList);
 
-        //System.out.println(profileObj.toJSONString());
+        if(verboseOutput)
+            System.out.println("JSON objects created successfully.");
+
         Files.write(Paths.get(targetFile.getPath()), profileObj.toJSONString().getBytes());
     }
 
@@ -104,12 +105,19 @@ public class ProfileCreator
             if(!currentLine.startsWith("["))
             {//It is not checked if the module code is a legitimate module, as the mod selector manages this already.
                 moduleCodes.add(currentLine);
+                if(verboseOutput)
+                    System.out.println("Identified module code: " + currentLine);
             }
             else if(currentLine.contains("]"))
             {
                 currentLine = currentLine.substring(1, currentLine.indexOf("]"));
                 String[] modulesInLine = currentLine.split(",");
                 moduleCodes.addAll(Arrays.asList(modulesInLine));
+                if(verboseOutput)
+                {
+                    for(String code : modulesInLine)
+                        System.out.println("Identified module code: " + code);
+                }
             }
             else
             {//If a line has a [ but no ], it has been formatted badly.

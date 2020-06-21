@@ -71,7 +71,6 @@ public class Main
                 System.exit(-1);
             }
 
-            flagloop:
             for(String arg : userCommand)
             {//Establishes all present switches before processing any user input.
                 if (!(arg.startsWith("-") && arg.length() > 1))
@@ -90,11 +89,11 @@ public class Main
 
                 switch (arg.charAt(1))
                 {//Assign the program's mode. Note if a user
-                    case 'c' : mode = CalculatorMode.CREATE;break flagloop;
-                    case 'u' : mode = CalculatorMode.UNION;break flagloop;
-                    case 'i' : mode = CalculatorMode.INTERSECTION;break flagloop;
-                    case 'd' : mode = CalculatorMode.DIFFERENCE;break flagloop;
-                    default : mode = CalculatorMode.UNRECOGNISED;break flagloop;
+                    case 'c' : mode = CalculatorMode.CREATE;break;
+                    case 'u' : mode = CalculatorMode.UNION;break;
+                    case 'i' : mode = CalculatorMode.INTERSECTION;break;
+                    case 'd' : mode = CalculatorMode.DIFFERENCE;break;
+                    default : mode = CalculatorMode.UNRECOGNISED;break;
                 }
             }
 
@@ -117,9 +116,12 @@ public class Main
                     else
                         pc = new ProfileCreator(profileOperandOne, verbose);
 
+                    if(verbose)
+                        System.out.println("Creating profile from list in file " + profileOperandOne.getPath());
                     pc.createProfile();
 
                     System.out.println("Operation success, created profile located at " + pc.getTargetFile().getAbsolutePath());
+                    System.out.println("You may continue to enter valid commands to further mutate these or any other profiles.");
                 }
                 else
                 {
