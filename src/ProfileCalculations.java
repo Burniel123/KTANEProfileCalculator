@@ -120,6 +120,25 @@ public class ProfileCalculations
     }
 
     /**
+     * Creates a profile representing the intersection of all profiles in the operands list, writing the result to the target file.
+     * @throws IOException - in the event of a standard I/O error.
+     * @throws ParseException - in the event that a provided profile JSON cannot be parsed.
+     */
+    @SuppressWarnings("unchecked")
+    public void computeIntersection() throws IOException, ParseException
+    {
+        JSONArray currentProfile = readProfile(operands.get(0));
+
+        for(int i = 1; i < operands.size(); i++)
+        {
+            JSONArray enabled = readProfile(operands.get(i));
+            currentProfile = intersection(currentProfile, enabled);
+        }
+
+        writeFinalProfile(currentProfile);
+    }
+
+    /**
      * Completes a simple union of two sets of enabled modules.
      * @param profile1 - JSONArray containing the list of enabled modules from the first profile.
      * @param profile2 - JSONArray containing the list of enabled modules from the second profile.
@@ -131,6 +150,22 @@ public class ProfileCalculations
         JSONArray result = new JSONArray();
         result.addAll(profile1);
         result.addAll(profile2);
+        return result;
+    }
+
+    /**
+     * Completes a simple intersection of two sets of enabled modules.
+     * @param profile1 - JSONArray containing the list of enabled modules from the first profile.
+     * @param profile2 - JSONArray containing the list of enabled modules from the second profile.
+     * @return a JSONArray containing the list of enabled modules in both of the provided profiles.
+     */
+    @SuppressWarnings("unchecked")
+    private JSONArray intersection(JSONArray profile1, JSONArray profile2)
+    {
+        JSONArray result = new JSONArray();
+        result.addAll(profile1);
+        profile1.removeAll(profile2);
+        result.removeAll(profile1);
         return result;
     }
 
