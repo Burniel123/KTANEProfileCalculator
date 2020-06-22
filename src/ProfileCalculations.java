@@ -68,8 +68,9 @@ public class ProfileCalculations
     {
         operands = new ArrayList<File>();
 
-        for (File child : Objects.requireNonNull(directory.listFiles())) {//Adds all immediate children of the directory provided to the operands list.
-            if (child.isFile() && child.getPath().substring(targetFile.getPath().lastIndexOf(".") + 1).equals("json"))
+        for (File child : Objects.requireNonNull(directory.listFiles()))
+        {//Adds all immediate children of the directory provided to the operands list.
+            if (child.isFile() && child.getPath().substring(child.getPath().lastIndexOf(".") + 1).equals("json"))
                 operands.add(child);
         }
 
@@ -90,8 +91,9 @@ public class ProfileCalculations
     {
         operands = new ArrayList<File>();
 
-        for (File child : Objects.requireNonNull(directory.listFiles())) {//Adds all immediate children of the directory provided to the operands list.
-            if (child.isFile() && child.getPath().substring(targetFile.getPath().lastIndexOf(".") + 1).equals("json"))
+        for (File child : Objects.requireNonNull(directory.listFiles()))
+        {//Adds all immediate children of the directory provided to the operands list.
+            if (child.isFile() && child.getPath().substring(child.getPath().lastIndexOf(".") + 1).equals("json"))
                 operands.add(child);
         }
 
