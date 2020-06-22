@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.Buffer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 /**
@@ -142,6 +145,10 @@ public class Main
                     else
                         pc.computeDifference();
 
+                    profileOperandOne = null;
+                    profileOperandTwo = null;
+                    destinationTarget = null;
+                    verbose = false;
                     System.out.println("Operation success, created profile located at " + pc.getTargetFile().getAbsolutePath());
                     System.out.println("You may continue to enter valid commands to further mutate these or any other profiles.");
                 }
@@ -174,7 +181,11 @@ public class Main
                 if(arg.startsWith("-"))
                     continue; //Ignore all flags as they will already have been checked.
 
-                if(fileOperandsCount == 0 && (new File(arg).isFile()))
+                //for(int i = 0; i < arg.length())
+
+                File test = new File(arg);
+                Path test2 = Paths.get(arg).toAbsolutePath();
+                if(fileOperandsCount == 0) //&& (Files.isRegularFile(Paths.get(test.getPath()))))//Well this is broken ...
                 {//First file supplied must be an existing file in create mode.
                     fileOperandsCount++;
                     profileOperandOne = new File(arg);
@@ -186,7 +197,7 @@ public class Main
                 }
                 else
                 {
-                    throw new ArgumentException("Create operation must have one operand only.");
+                    throw new ArgumentException("Create operation must have exactly one valid operand.");
                 }
 
             }

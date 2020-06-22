@@ -119,12 +119,20 @@ public class ProfileCalculations
     @SuppressWarnings("unchecked")
     public void computeUnion() throws IOException, ParseException
     {
+        if(verboseOutput)
+        {
+            System.out.println("Calculating union of following profiles:");
+            for(File op : operands)
+                System.out.println(op.getPath());
+        }
         JSONArray currentProfile = new JSONArray();
 
-        for(int i = 0; i < operands.size(); i++)
+        for (File operand : operands)
         {
-            JSONArray enabled = readProfile(operands.get(i));
+            JSONArray enabled = readProfile(operand);
             currentProfile = union(currentProfile, enabled);
+            if (verboseOutput)
+                System.out.println("Process completed for profile: " + operand.getPath());
         }
 
         writeFinalProfile(currentProfile);
@@ -140,10 +148,19 @@ public class ProfileCalculations
     {
         JSONArray currentProfile = readProfile(operands.get(0));
 
-        for(int i = 1; i < operands.size(); i++)
+        if(verboseOutput)
         {
-            JSONArray enabled = readProfile(operands.get(i));
+            System.out.println("Calculating intersection of following profiles:");
+            for(File op : operands)
+                System.out.println(op.getPath());
+        }
+
+        for(File operand : operands)
+        {
+            JSONArray enabled = readProfile(operand);
             currentProfile = intersection(currentProfile, enabled);
+            if (verboseOutput)
+                System.out.println("Process completed for profile: " + operand.getPath());
         }
 
         writeFinalProfile(currentProfile);
@@ -160,6 +177,12 @@ public class ProfileCalculations
     {
         if(operands.size() != 2)
             throw new ArgumentException("Difference operation requires 2 operands.");
+
+        if(verboseOutput)
+        {
+            System.out.println("Identified correct number of operands.");
+            System.out.println("Computing difference operation " + operands.get(0).getPath() + " - " + operands.get(1).getPath());
+        }
 
         JSONArray profile1 = readProfile(operands.get(0));
         JSONArray profile2 = readProfile(operands.get(1));
