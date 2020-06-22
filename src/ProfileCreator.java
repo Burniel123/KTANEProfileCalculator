@@ -123,7 +123,11 @@ public class ProfileCreator
             {//If a line has a [ but no ], it has been formatted badly.
                 throw new ListFormatException("Badly formatted module list file!");
             }
+
         }
+
+        moduleCodes.remove("ALL_SOLVABLE");
+        moduleCodes.remove("ALL_NEEDY");
 
         return moduleCodes;
     }
