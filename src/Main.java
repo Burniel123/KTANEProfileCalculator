@@ -22,7 +22,7 @@ public class Main
      */
     public enum CalculatorMode
     {
-        CREATE, UNION, INTERSECTION, DIFFERENCE, UNRECOGNISED;
+        CREATE, CREATENAME, UNION, INTERSECTION, DIFFERENCE, UNRECOGNISED;
     }
 
     private static CalculatorMode mode = null;
@@ -93,6 +93,7 @@ public class Main
                 switch (arg.charAt(1))
                 {//Assign the program's mode. Note if a user
                     case 'c' : mode = CalculatorMode.CREATE;break;
+                    case 'n' : mode = CalculatorMode.CREATENAME;break;
                     case 'u' : mode = CalculatorMode.UNION;break;
                     case 'i' : mode = CalculatorMode.INTERSECTION;break;
                     case 'd' : mode = CalculatorMode.DIFFERENCE;break;
@@ -111,16 +112,22 @@ public class Main
                     //TODO: Create the documentation when appropriate and link from here.
                     System.exit(-1);
                 }
-                else if(mode == CalculatorMode.CREATE)
+                else if(mode == CalculatorMode.CREATE || mode == CalculatorMode.CREATENAME)
                 {
                     ProfileCreator pc = null;
+                    boolean useNames = false;
+
+                    if(mode == CalculatorMode.CREATENAME)
+                        useNames = true;
+
                     if(destinationTarget != null)
-                        pc = new ProfileCreator(profileOperandOne, destinationTarget, verbose);
+                        pc = new ProfileCreator(profileOperandOne, destinationTarget, verbose, useNames);
                     else
-                        pc = new ProfileCreator(profileOperandOne, verbose);
+                        pc = new ProfileCreator(profileOperandOne, verbose, useNames);
 
                     if(verbose)
                         System.out.println("Creating profile from list in file " + profileOperandOne.getPath());
+
                     pc.createProfile();
 
                     System.out.println("Operation success, created profile located at " + pc.getTargetFile().getAbsolutePath());
@@ -174,17 +181,13 @@ public class Main
         boolean directorySupplied = false;
         boolean unacceptableFilesSupplied = false;
 
-        if(mode == CalculatorMode.CREATE)
+        if(mode == CalculatorMode.CREATE || mode == CalculatorMode.CREATENAME)
         {//Create is a unary operation and thus has a different format for specifying files to use.
             for(String arg : args)
             {//A second iteration of the argument list to establish which file locations are to be used.
                 if(arg.startsWith("-"))
                     continue; //Ignore all flags as they will already have been checked.
 
-                //for(int i = 0; i < arg.length())
-
-                File test = new File(arg);
-                Path test2 = Paths.get(arg).toAbsolutePath();
                 if(fileOperandsCount == 0) //&& (Files.isRegularFile(Paths.get(test.getPath()))))//Well this is broken ...
                 {//First file supplied must be an existing file in create mode.
                     fileOperandsCount++;

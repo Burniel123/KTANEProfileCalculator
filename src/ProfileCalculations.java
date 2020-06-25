@@ -54,7 +54,7 @@ public class ProfileCalculations
         operands.add(operand2);
 
         this.verboseOutput = verboseOutput;
-        targetFile = new File("/calculated.json");
+        targetFile = new File("calculated.json");
     }
 
     /**
@@ -101,7 +101,7 @@ public class ProfileCalculations
             throw new NullPointerException("No profiles in the provided directory.");
 
         this.verboseOutput = verboseOutput;
-        targetFile = new File("/calculated.json");
+        targetFile = new File("calculated.json");
     }
 
     /**
