@@ -4,7 +4,9 @@ The KTANE Profile Calculator is a command-line tool designed to create and perfo
 ## What does the calculator do?
 The KTANE Profile Calculator supports four main operations:
 
-*CREATE* - creates a profile from scratch using a test file containing module codes (formatted with a module code on each line, or in the format given in the [Challenge Bombs Spreadsheet](https://docs.google.com/spreadsheets/d/1yQDBEpu0dO7-CFllakfURm4NGGdQl6tN-39m6O0Q_Ow/edit#gid=305025844)).
+*CREATE* \[From module codes\] - creates a profile from scratch using a text file containing module codes (formatted with a module code on each line, or in the format given in the [Challenge Bombs Spreadsheet](https://docs.google.com/spreadsheets/d/1yQDBEpu0dO7-CFllakfURm4NGGdQl6tN-39m6O0Q_Ow/edit#gid=305025844)).
+
+*CREATE FROM NAME* - creates a profile from scratch using a text file containing module names, as defined by the [KTANE Manual Repository](https://ktane.timwi.de/).
 
 *UNION* - takes multiple profiles and creates a profile consisting of all modules in at least one of the given profiles.
 
@@ -39,7 +41,7 @@ The structure of a command looks as follows:
 
 All commands must start with a flag which indicates which operation to perform: -c (CREATE), -u (UNION), -i (INTERSECTION) or -d (DIFFERENCE). Each are explained below. The verbose flag may optionally be added after this to print out more details to the screen about the program's progress.
 
-### CREATE
+### CREATE \[from codes\]
 The create operation creates a profile from a .txt file containing a list of modules. This file may be structured in one of two ways:
 * A list of module codes, with one code per line and no commas or other characters added to each code.
 * A list of module codes as formatted on the challenge bomb spreadsheet (eg `[BlindAlleyModule] Count: 1`), with one code per line and no commas or other characters added.
@@ -54,6 +56,18 @@ Turn a list of module codes in text file centurion.txt into a profile called cen
 
 Turn a list of module codes in text file modules.txt into a profile called profile.json in a new subfolder called "profiles" with progress details:
 `-c -verbose modules.txt profiles/profile.json`
+
+The created profile can then be moved into your KTANE ModProfiles folder and will appear in-game ready to be used.
+
+
+### CREATE FROM NAMES
+This operation allows for profiles to be created using a list of names instead of in-game module codes. This can be helpful if you do not have a list of codes, but profile compilation will take slightly longer. The list of names MUST be a simple text file, with one module name per line. 
+
+All CREATE FROM NAME operations start with -n or -n -verbose. Users are strongly encouraged to use -verbose with this operation, as this will output full details on which module names the program has managed to find a matching code for (any names which do not exactly match a module's "official name" will not be included in the profile). Otherwise, this operation works exactly the same as the standard CREATE operation: one text file must be specified followed by an optional destination file.
+
+#### Examples:
+Turn a list of module names in text file centurion.txt into a profile called centurion.json:
+`-n -verbose centurion.txt centurion.json`
 
 The created profile can then be moved into your KTANE ModProfiles folder and will appear in-game ready to be used.
 
