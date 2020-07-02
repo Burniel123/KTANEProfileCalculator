@@ -118,7 +118,10 @@ public class ProfileCreator
 
         while((currentLine = listReader.readLine()) != null)
         {//Continually reads lines of the file until
-            if(!currentLine.startsWith("["))
+
+            if(!containsRelevantChars(currentLine))
+                continue;
+            else if(!currentLine.startsWith("["))
             {//It is not checked if the module code is a legitimate module, as the mod selector manages this already.
                 moduleCodes.add(currentLine);
                 if(verboseOutput)
@@ -127,7 +130,7 @@ public class ProfileCreator
             else if(currentLine.contains("]"))
             {
                 currentLine = currentLine.substring(1, currentLine.indexOf("]"));
-                String[] modulesInLine = currentLine.split(",");
+                String[] modulesInLine = currentLine.split(", ");
                 moduleCodes.addAll(Arrays.asList(modulesInLine));
                 if(verboseOutput)
                 {
@@ -146,6 +149,22 @@ public class ProfileCreator
         moduleCodes.remove("ALL_NEEDY");
 
         return moduleCodes;
+    }
+
+    /**
+     * Establishes if a line in the file actually contains relevant characters.
+     * @param line - String file line to check.
+     * @return true if contains useful characters, false if it's just a newline or similar.
+     */
+    private boolean containsRelevantChars(String line)
+    {
+        for(char c : line.toCharArray())
+        {
+            if((int) c >= 48 && (int) c <= 122)
+                return true;
+        }
+
+        return false;
     }
 
     /**
