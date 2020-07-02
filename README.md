@@ -2,7 +2,7 @@
 The KTANE Profile Calculator is a command-line tool designed to create and perform set operations on mod profiles in Keep Talking & Nobody Explodes. It has the ability to create a profile for a specific challenge bomb/mission using a list of modules in that mission, and to form profiles based on combinations of other profiles.
 
 ## What does the calculator do?
-The KTANE Profile Calculator supports four main operations:
+The KTANE Profile Calculator supports five main operations:
 
 *CREATE* \[From module codes\] - creates a profile from scratch using a text file containing module codes (formatted with a module code on each line, or in the format given in the [Challenge Bombs Spreadsheet](https://docs.google.com/spreadsheets/d/1yQDBEpu0dO7-CFllakfURm4NGGdQl6tN-39m6O0Q_Ow/edit#gid=305025844)).
 
