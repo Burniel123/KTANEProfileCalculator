@@ -76,7 +76,7 @@ public class Main
 
             for(String arg : userCommand)
             {//Establishes all present switches before processing any user input.
-                if (!(arg.startsWith("-") && arg.length() > 1))
+                if (!((arg.startsWith("-") || arg.startsWith("!")) && arg.length() > 1))
                     break;
 
                 if (arg.equals("-verbose"))
@@ -109,7 +109,6 @@ public class Main
                 {//Program must terminate if unable to determine which function to perform.
                     System.err.println("Invalid syntax! Unable to parse your command line instructions.");
                     System.err.println("Please see the documentation for examples of how to use this tool.");
-                    //TODO: Create the documentation when appropriate and link from here.
                     System.exit(-1);
                 }
                 else if(mode == CalculatorMode.CREATE || mode == CalculatorMode.CREATENAME)
@@ -185,10 +184,10 @@ public class Main
         {//Create is a unary operation and thus has a different format for specifying files to use.
             for(String arg : args)
             {//A second iteration of the argument list to establish which file locations are to be used.
-                if(arg.startsWith("-"))
+                if(arg.startsWith("-") || arg.startsWith("!"))
                     continue; //Ignore all flags as they will already have been checked.
 
-                if(fileOperandsCount == 0) //&& (Files.isRegularFile(Paths.get(test.getPath()))))//Well this is broken ...
+                if(fileOperandsCount == 0)
                 {//First file supplied must be an existing file in create mode.
                     fileOperandsCount++;
                     profileOperandOne = new File(arg);
@@ -209,7 +208,7 @@ public class Main
         {//All other operations are binary and thus can be treated in similar ways initially.
             for(String arg : args)
             {//A second iteration of the argument list to establish which file locations are to be used.
-                if(arg.startsWith("-"))
+                if(arg.startsWith("-") || arg.startsWith("!"))
                     continue; //Ignore all flags as they will already have been checked.
 
                 if(fileOperandsCount == 0 && (new File(arg).isFile()))
