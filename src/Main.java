@@ -40,10 +40,11 @@ public class Main
      */
     public static void main(String[] args)
     {
-        System.out.println("**********The KTANE Profile Calculator**********");
-        System.out.println("          Software created by Burniel");
-        System.out.println("           Documentation coming soon!");
-        System.out.println("      Enter a valid command at any time...");
+        System.out.println("*******************************The KTANE Profile Calculator*******************************");
+        System.out.println("                               Software created by Burniel");
+        System.out.println(" Documentation available at https://github.com/Burniel123/KTANEProfileCalculator#usage");
+        System.out.println("               Enter a valid command at any time or type \"help\" for help.");
+        System.out.println("-------------------------------------------------------------------------------------------");
 
         while(true)
         {//Program runs until the user manually closes it, allowing them to complete as many profile operations as they wish.
@@ -69,9 +70,21 @@ public class Main
             if(userCommand.length == 0)
             {//Users must supply appropriate command line arguments to use this program.
                 System.err.println("Invalid syntax! You must supply information on the command line.");
-                System.err.println("Please see the documentation for examples of how to use this tool.");
-                //TODO: Create the documentation when appropriate and link from here.
+                System.err.println("Please see the documentation for examples of how to use this tool, or type \"help\".");
                 System.exit(-1);
+            }
+
+            if(userCommand[0].toLowerCase().equals("help"))
+            {
+                System.out.println("To create a profile from a text file of module codes, use !c [-verbose] textFile.txt [destination.json]");
+                System.out.println("To create a profile from a text file of module names, use !n [-verbose] textFile.txt [destination.json]");
+                System.out.println("To calculate the union of two profiles, use !u [-verbose] profile1.json profile2.json [destination.json]");
+                System.out.println("To calculate the intersection of two profiles, use !i [-verbose] profile1.json profile2.json [destination.json]");
+                System.out.println("To calculate the union/intersection of >2 profiles, substitute the two profiles with the name of a directory containing several profile JSONs (the directory may not contain anything else)");
+                System.out.println("To calculate the difference of profile1 - profile2, use !d [-verbose] profile1.json profile2.json [destination.json]");
+                System.out.println("Square brackets indicate optional parts of a command");
+                System.out.println("Full documentation is at https://github.com/Burniel123/KTANEProfileCalculator#usage");
+                continue;
             }
 
             for(String arg : userCommand)
@@ -108,7 +121,7 @@ public class Main
                 if(mode == CalculatorMode.UNRECOGNISED)
                 {//Program must terminate if unable to determine which function to perform.
                     System.err.println("Invalid syntax! Unable to parse your command line instructions.");
-                    System.err.println("Please see the documentation for examples of how to use this tool.");
+                    System.err.println("Please see the documentation for examples of how to use this tool, or type \"help\".");
                     System.exit(-1);
                 }
                 else if(mode == CalculatorMode.CREATE || mode == CalculatorMode.CREATENAME)
