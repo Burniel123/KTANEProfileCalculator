@@ -1,10 +1,11 @@
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.Buffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class ProfileCreator
     private boolean verboseOutput = false;
     private boolean useNames = false;
 
-    private static final String CONFIG_FILE = "https://raw.githubusercontent.com/Burniel123/MakeMyManual/master/src/main/resources/modules-config-details.txt";
+    private static final String JSON_URL = "https://ktane.timwi.de/json/raw";
 
     /**
      * Creates a new ProfileCreator without a destination file. The created file will be dumped in the user's
@@ -72,9 +73,10 @@ public class ProfileCreator
      * Creates a profile from the object's list file operand.
      * @throws IOException - in the event of a standard input error.
      * @throws ListFormatException - in the event the list file is badly formatted.
+     * @throws ParseException - in the event that the json source used to map module names to module codes is badly formatted.
      */
     @SuppressWarnings("unchecked")
-    public void createProfile() throws IOException, ListFormatException
+    public void createProfile() throws IOException, ListFormatException, ParseException
     {
         ArrayList<String> moduleCodesToInclude = new ArrayList<String>();
 
@@ -168,29 +170,42 @@ public class ProfileCreator
     }
 
     /**
-     * Reads a file containing module names and references a data repository to produce a list of module codes for the profile.
+     * Reads a file containing module names and references the KTANE manual repository to produce a list of module codes for the profile.
      * @return an ArrayList of module codes.
      * @throws IOException - in the event of a standard input error.
      * @throws ListFormatException - in the event that the user's list is poorly formatted.
+     * @throws ParseException - in the event that
      */
-    private ArrayList<String> readModuleCodesFromModuleNames() throws IOException, ListFormatException
+    private ArrayList<String> readModuleCodesFromModuleNames() throws IOException, ListFormatException, ParseException
     {
         ArrayList<String> moduleNames = readModuleCodes();
-        HashMap<String, String> codesTable = generateModuleCodesTable();
         ArrayList<String> moduleCodes = new ArrayList<String>();
+
+        JSONArray moduleInfo = obtainModuleMappings();
+        boolean codeFound = false;
 
         for(String name : moduleNames)
         {
-            String code = codesTable.get(name);
-            if(code != null)
+            codeFound = false;
+
+            for(Object o : moduleInfo)
+            {
+                String code = ((String) ((JSONObject) o).get("ModuleID")).toLowerCase();
+
+                if (((String) ((JSONObject) o).get("Name")).toLowerCase().equals(name.toLowerCase())) {
+                    if (verboseOutput)
+                        System.out.println("Successfully converted module name " + name + " to code " + code);
+                    moduleCodes.add(code);
+                    codeFound = true;
+                    break;
+                }
+            }
+
+            if(!codeFound)
             {
                 if(verboseOutput)
-                    System.out.println("Successfully converted module name " + name + " to code " + code);
-                moduleCodes.add(code);
+                    System.out.println("Unable to find match for module name: " + name);
             }
-            else if(verboseOutput)
-                System.out.println("Unable to find match for module name: " + name);
-
         }
 
         return moduleCodes;
@@ -198,26 +213,19 @@ public class ProfileCreator
     }
 
     /**
-     * References the config file from the repository and produces a mapping from module names to module codes.
-     * @return a HashMap mapping module names to codes.
+     * Obtains the raw JSON from the KTANE manual repository and stores it in
+     * @return JSONObject containing information on all modded modules known to the KTANE Manual Repo.
      * @throws IOException - in the event of a standard input error.
+     * @throws ParseException - in the event that the json downloaded is improperly formatted.
      */
-    private HashMap<String, String> generateModuleCodesTable() throws IOException
+    @SuppressWarnings("unchecked")
+    private JSONArray obtainModuleMappings() throws IOException, ParseException
     {
-        HashMap<String, String> codesTable = new HashMap<String, String>();
-        URL url = new URL(CONFIG_FILE);
-        URLConnection connection = url.openConnection();
+        URL url = new URL(JSON_URL);
+        File mappingsFile = new File("codes.txt");
+        InputStreamReader in = new InputStreamReader(url.openStream());
+        JSONParser parser = new JSONParser();
 
-        BufferedReader configReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        String configLine = null;
-
-        while((configLine = configReader.readLine()) != null)
-        {
-            String[] lineContent = configLine.split("\t");
-
-            codesTable.put(lineContent[0], lineContent[1]);
-        }
-
-        return codesTable;
+        return (JSONArray) ((JSONObject)parser.parse(in)).get("KtaneModules");
     }
 }
