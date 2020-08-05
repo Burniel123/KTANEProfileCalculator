@@ -35,11 +35,12 @@ public class Main
      */
     public static void main(String[] args)
     {
-        System.out.println("*******************************The KTANE Profile Calculator*******************************");
-        System.out.println("                               Software created by Burniel");
-        System.out.println(" Documentation available at https://github.com/Burniel123/KTANEProfileCalculator#usage");
-        System.out.println("               Enter a valid command at any time or type \"help\" for help.");
-        System.out.println("-------------------------------------------------------------------------------------------");
+        System.out.println("*********************The KTANE Profile Calculator*********************");
+        System.out.println("                      Software created by Burniel");
+        System.out.println("                      Documentation available at:");
+        System.out.println("       https://github.com/Burniel123/KTANEProfileCalculator#usage");
+        System.out.println("      Enter a valid command at any time or type \"help\" for help.");
+        System.out.println("------------------------------------------------------------------------");
 
         while(true)
         {//Program runs until the user manually closes it, allowing them to complete as many profile operations as they wish.

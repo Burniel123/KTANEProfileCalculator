@@ -26,12 +26,12 @@ It is also **not** necessary to use this software to be able to play with people
 
 ## Usage
 ### Pre-Requisites
-The current version of the software is only known to work on Windows with Java version 12 or later installed. It may also work on other Operating Systems or with older versions of Java, but this is not verified and behaviours may vary.
+The current version of the software is only known to work on Windows with Java version 8 or later installed. It may also work on other Operating Systems or with older versions of Java, but this is not verified and behaviours may vary.
 
 In order to make any use of the profiles created with this program, you will need a copy of Keep Talking and Nobody Explodes, enough modded modules installed to make profiles worthwhile, and the ModSelector mod to manage these in-game, although all these are assumed as the exact purpose of this software will likely only be clear to people who are already very familiar with these.
 
 ### Installation
-The KTANE Profile Calculator is not yet publicly released. Installation will be simple: download the zip, unzip it wherever you like and run it by double-clicking the launcher batch file. It is recommended that you copy any profiles/lists you intend on using to the program's folder before use as you will need to reference these by their path, but this is not essential.
+To install the software, download the latest release file from this repository and unzip it somewhere convenient. To run the software, simply double-click the KPC-Launcher batch file.
 
 ### General Usage
 All operations are completed using text-based commands. These start with and exclamation mark and an indication of which operation is to be used (eg "!c"). This is followed by one or more file names, which describe which files to complete the operation on and (optionally) where to store the resulting profile.
