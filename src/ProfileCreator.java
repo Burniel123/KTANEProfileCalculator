@@ -97,8 +97,9 @@ public class ProfileCreator
         modulesList.addAll(moduleCodesToInclude);
 
         JSONObject profileObj = new JSONObject();
-        profileObj.put("Operation", "0");
+        profileObj.put("Operation", 0);
         profileObj.put("EnabledList", modulesList);
+        profileObj.put("DisabledList", new JSONArray());
 
         if(verboseOutput)
             System.out.println("JSON objects created successfully.");
