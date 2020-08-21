@@ -25,6 +25,7 @@ public class Main
     private static File profileOperandOne = null;
     private static File profileOperandTwo = null;
     private static File destinationTarget = null;
+    private static final double VERSION = 1.01;
 
     /**
      * Main method for the KTANE Profile Calculator. Primary focus is on parsing the user's command line input.
