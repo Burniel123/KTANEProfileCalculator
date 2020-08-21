@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
 
 /**
  * Holds all fundamental program logic relating to the KTANE Profile Calculator, such as startup.
@@ -25,7 +26,8 @@ public class Main
     private static File profileOperandOne = null;
     private static File profileOperandTwo = null;
     private static File destinationTarget = null;
-    private static final double VERSION = 1.01;
+    private static final String VERSION = "1.1";
+    private static final String VERSION_FILE_ADDRESS = "https://github.com/Burniel123/KTANEProfileCalculator/blob/master/VERSION.txt";
 
     /**
      * Main method for the KTANE Profile Calculator. Primary focus is on parsing the user's command line input.
@@ -41,6 +43,7 @@ public class Main
         System.out.println("                      Documentation available at:");
         System.out.println("       https://github.com/Burniel123/KTANEProfileCalculator#usage");
         System.out.println("      Enter a valid command at any time or type \"help\" for help.");
+        checkForUpdate();
         System.out.println("------------------------------------------------------------------------");
 
         while(true)
@@ -254,5 +257,35 @@ public class Main
 
             }
         }
+    }
+
+    public static void checkForUpdate()
+    {
+        try
+        {
+            URL url = new URL(VERSION_FILE_ADDRESS);
+            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+            String versionLine = null;
+            boolean correctVersionFound = false;
+            while((versionLine = in.readLine()) != null)
+            {
+                if(versionLine.contains(VERSION))
+                {
+                    correctVersionFound = true;
+                    break;
+                }
+            }
+
+            if(!correctVersionFound)
+            {
+                System.out.println("A new version of KTANEProfileCalculator is available! Please update here:");
+                System.out.println("      https://github.com/Burniel123/KTANEProfileCalculator/releases");
+            }
+        }
+        catch(IOException e)
+        {
+            System.out.println("Unable to check for updates. If this happens regularly, please report a bug.");
+        }
+
     }
 }

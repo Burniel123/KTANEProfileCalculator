@@ -5,12 +5,10 @@ import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 /**
  * Handles creation of a profile from a list of modules.
@@ -210,7 +208,6 @@ public class ProfileCreator
         }
 
         return moduleCodes;
-
     }
 
     /**
