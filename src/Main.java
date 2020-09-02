@@ -26,7 +26,7 @@ public class Main
     private static File profileOperandOne = null;
     private static File profileOperandTwo = null;
     private static File destinationTarget = null;
-    private static final String VERSION = "1.1";
+    private static final String VERSION = "1.2";
     private static final String VERSION_FILE_ADDRESS = "https://github.com/Burniel123/KTANEProfileCalculator/blob/master/VERSION.txt";
 
     /**

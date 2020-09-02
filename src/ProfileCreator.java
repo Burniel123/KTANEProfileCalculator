@@ -190,8 +190,9 @@ public class ProfileCreator
             for(Object o : moduleInfo)
             {
                 String code = ((String) ((JSONObject) o).get("ModuleID")).toLowerCase();
-
-                if (((String) ((JSONObject) o).get("Name")).toLowerCase().equals(name.toLowerCase())) {
+                String modName = ((String) ((JSONObject) o).get("Name")).toLowerCase();
+                if (modName.equals(name.toLowerCase()) || modName.equals(("the "+ name).toLowerCase()))
+                {
                     if (verboseOutput)
                         System.out.println("Successfully converted module name " + name + " to code " + code);
                     moduleCodes.add(code);
